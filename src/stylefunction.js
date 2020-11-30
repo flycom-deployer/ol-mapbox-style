@@ -348,13 +348,12 @@ export default function(olLayer, glStyle, source, resolutions = defaultResolutio
         continue;
       }
       const filter = layer.filter;
-      const externFilterIndex = layerData && layerData.metadata && layerData.metadata.externFilterIndex !== undefined ?
-        layerData.metadata.externFilterIndex :
-        true;
+
+      const externFilterIndex = layer && layer.metadata && layer.metadata.externFilterIndex !== undefined ?
+        layer.metadata.externFilterIndex : true;
       const extFilter = externalFilter(externFilterIndex);
 
       if (extFilter && (!filter || evaluateFilter(layerId, filter, f, zoom))) {
-      // if (!filter || evaluateFilter(layerId, filter, f, zoom)) {
         let color, opacity, fill, stroke, strokeColor, style;
         const index = layerData.index;
         if (type == 3 && (layer.type == 'fill' || layer.type == 'fill-extrusion')) {
