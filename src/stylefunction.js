@@ -167,6 +167,7 @@ function fromTemplate(text, properties) {
   return text;
 }
 
+// eslint-disable-next-line valid-jsdoc
 /**
  * ```js
  * import stylefunction from 'ol-mapbox-style/dist/stylefunction';
@@ -238,7 +239,7 @@ function fromTemplate(text, properties) {
  * @return {StyleFunction} Style function for use in
  * `ol.layer.Vector` or `ol.layer.VectorTile`.
  */
-export default function(olLayer, glStyle, source, resolutions = defaultResolutions, spriteData, spriteImageUrl, getFonts) {
+export default function(olLayer, glStyle, source, resolutions = defaultResolutions, spriteData, spriteImageUrl, getFonts, externalFilter) {
   if (typeof glStyle == 'string') {
     glStyle = JSON.parse(glStyle);
   }
@@ -347,7 +348,9 @@ export default function(olLayer, glStyle, source, resolutions = defaultResolutio
         continue;
       }
       const filter = layer.filter;
-      if (!filter || evaluateFilter(layerId, filter, f, zoom)) {
+      const extFilter = externalFilter(i);
+      if (extFilter && (!filter || evaluateFilter(layerId, filter, f, zoom))) {
+      // if (!filter || evaluateFilter(layerId, filter, f, zoom)) {
         let color, opacity, fill, stroke, strokeColor, style;
         const index = layerData.index;
         if (type == 3 && (layer.type == 'fill' || layer.type == 'fill-extrusion')) {
