@@ -346,13 +346,15 @@ export default function(olLayer, glStyle, source, resolutions = defaultResolutio
       // if (layout.visibility === 'none' || ('minzoom' in layer && zoom < layer.minzoom) ||
       if (('minzoom' in layer && zoom < layer.minzoom) ||
           ('maxzoom' in layer && zoom >= layer.maxzoom)) {
-        return 'continue';
+        // return 'continue';
+        continue;
       }
       const filter = layer.filter;
 
       if (!filter || evaluateFilter(layerId, filter, f, zoom)) {
         if (layout.visibility === 'none') {
-          return 'break';
+          // return 'break';
+          break;
         }
 
         let color, opacity, fill, stroke, strokeColor, style;
