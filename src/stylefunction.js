@@ -239,7 +239,7 @@ function fromTemplate(text, properties) {
  * @return {StyleFunction} Style function for use in
  * `ol.layer.Vector` or `ol.layer.VectorTile`.
  */
-export default function(olLayer, glStyle, source, resolutions = defaultResolutions, spriteData, spriteImageUrl, getFonts, externalFilter) {
+export default function(olLayer, glStyle, source, resolutions = defaultResolutions, spriteData, spriteImageUrl, getFonts) {
   if (typeof glStyle == 'string') {
     glStyle = JSON.parse(glStyle);
   }
@@ -343,17 +343,18 @@ export default function(olLayer, glStyle, source, resolutions = defaultResolutio
 
       const layout = layer.layout || emptyObj;
       const paint = layer.paint || emptyObj;
-      if (layout.visibility === 'none' || ('minzoom' in layer && zoom < layer.minzoom) ||
+      // if (layout.visibility === 'none' || ('minzoom' in layer && zoom < layer.minzoom) ||
+      if (('minzoom' in layer && zoom < layer.minzoom) ||
           ('maxzoom' in layer && zoom >= layer.maxzoom)) {
-        continue;
+        return 'continue';
       }
       const filter = layer.filter;
 
-      const externFilterIndex = layer && layer.metadata && layer.metadata.externFilterIndex !== undefined ?
-        layer.metadata.externFilterIndex : true;
-      const extFilter = externalFilter(externFilterIndex);
+      if (!filter || evaluateFilter(layerId, filter, f, zoom)) {
+        if (layout.visibility === 'none') {
+          return 'break';
+        }
 
-      if (extFilter && (!filter || evaluateFilter(layerId, filter, f, zoom))) {
         let color, opacity, fill, stroke, strokeColor, style;
         const index = layerData.index;
         if (type == 3 && (layer.type == 'fill' || layer.type == 'fill-extrusion')) {
