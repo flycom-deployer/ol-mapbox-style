@@ -352,7 +352,7 @@ export default function(olLayer, glStyle, source, resolutions = defaultResolutio
       const filter = layer.filter;
 
       if (!filter || evaluateFilter(layerId, filter, f, zoom)) {
-        if (layout.visibility === 'none') {
+        if (stylesLength > -1 || layout.visibility === 'none') {
           // return 'break';
           break;
         }
