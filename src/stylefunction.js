@@ -336,6 +336,7 @@ export default function(olLayer, glStyle, source, resolutions = defaultResolutio
       type: type
     };
     let stylesLength = -1;
+    let groupIndex = -1;
     for (let i = 0, ii = layers.length; i < ii; ++i) {
       const layerData = layers[i];
       const layer = layerData.layer;
@@ -346,15 +347,25 @@ export default function(olLayer, glStyle, source, resolutions = defaultResolutio
       // if (layout.visibility === 'none' || ('minzoom' in layer && zoom < layer.minzoom) ||
       if (('minzoom' in layer && zoom < layer.minzoom) ||
           ('maxzoom' in layer && zoom >= layer.maxzoom)) {
-        // return 'continue';
         continue;
       }
       const filter = layer.filter;
 
       if (!filter || evaluateFilter(layerId, filter, f, zoom)) {
-        if (stylesLength > -1 || layout.visibility === 'none') {
-          // return 'break';
+        if (layout.visibility === 'none') {
           break;
+        }
+
+        const layerGroupIndex = layer.metadata && layer.metadata.groupIndex
+          ? layer.metadata.groupIndex
+          : -1;
+
+        if (layerGroupIndex > -1) {
+          if (groupIndex > -1 && groupIndex !== layerGroupIndex) {
+            break;
+          }
+
+          groupIndex = layerGroupIndex;
         }
 
         let color, opacity, fill, stroke, strokeColor, style;
