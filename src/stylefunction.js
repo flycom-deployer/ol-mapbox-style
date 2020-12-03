@@ -356,7 +356,7 @@ export default function(olLayer, glStyle, source, resolutions = defaultResolutio
           break;
         }
 
-        const layerGroupIndex = layer.metadata && layer.metadata.groupIndex
+        const layerGroupIndex = layer.metadata && layer.metadata.groupIndex !== undefined
           ? layer.metadata.groupIndex
           : -1;
 
